@@ -1,9 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { sendInquiry, type ContactFormState } from "@/app/actions/send-inquiry";
+
+export type ContactFormState = {
+  success: boolean;
+  message: string;
+};
 
 const contactFormInitialState: ContactFormState = {
   success: false,
@@ -394,10 +398,60 @@ function ProjectCard({
 }
 
 export default function PortfolioPage() {
-  const [contactState, formAction, isPending] = useActionState(
-    sendInquiry,
+  const [isPending, setIsPending] = useState(false);
+  const [contactState, setContactState] = useState<ContactFormState>(
     contactFormInitialState,
   );
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsPending(true);
+    setContactState({ success: false, message: "" });
+
+    const formData = new FormData(event.currentTarget);
+    const name = String(formData.get("name") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim();
+    const projectType = String(formData.get("projectType") ?? "").trim();
+    const message = String(formData.get("message") ?? "").trim();
+
+    if (!name || !email || !projectType || !message) {
+      setContactState({
+        success: false,
+        message: "Please fill in every field before sending.",
+      });
+      setIsPending(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setContactState({
+          success: true,
+          message: "Your message was sent successfully. I will reply soon.",
+        });
+        event.currentTarget.reset();
+      } else {
+        setContactState({
+          success: false,
+          message: data.message || "Something went wrong. Please try again.",
+        });
+      }
+    } catch {
+      setContactState({
+        success: false,
+        message: "An error occurred. Please try again later.",
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <main className="relative overflow-hidden">
@@ -682,9 +736,14 @@ export default function PortfolioPage() {
           </div>
 
           <form
-            action={formAction}
+            onSubmit={handleSubmit}
             className="grid gap-4 rounded-[1.5rem] border border-zinc-200 bg-zinc-50 p-5 sm:p-6"
           >
+            <input
+              type="hidden"
+              name="access_key"
+              value={process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "REPLACE_WITH_WEB3FORMS_ACCESS_KEY"}
+            />
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="grid gap-2 text-sm font-medium text-zinc-700">
                 Name
