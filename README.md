@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Siddharth Pulugujja Portfolio
+
+Modern, minimal, conversion-focused freelancer portfolio for Siddharth Pulugujja.
+
+## Stack
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+
+## Sections
+
+- Hero with clear positioning and CTAs
+- About and services
+- Featured projects
+- Skills and testimonials
+- Contact form and footer
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contact Form Email Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The contact form sends email through a Next.js server action using Nodemailer. Add the SMTP settings below in a local `.env.local` file:
 
-## Learn More
+```bash
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-smtp-username
+SMTP_PASS=your-smtp-password
+CONTACT_FROM_EMAIL=contact@siddharthp.com
+CONTACT_TO_EMAIL=contact@siddharthp.com
+```
 
-To learn more about Next.js, take a look at the following resources:
+This does not require a separate backend service, but it does require server-side SMTP credentials.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - start the development server
+- `npm run lint` - run ESLint
+- `npm run build` - build the production app
